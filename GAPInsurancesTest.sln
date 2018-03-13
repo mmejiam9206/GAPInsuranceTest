@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GAPInsurancesTest", "GAPInsurancesTest\GAPInsurancesTest.csproj", "{63122E9A-815F-434B-A345-7128F17FC314}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GAPInsurancesTest.Tests", "GAPInsurancesTest.Tests\GAPInsurancesTest.Tests.csproj", "{3E77DE3A-54CB-4BC5-A97E-8865FD481813}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63122E9A-815F-434B-A345-7128F17FC314}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63122E9A-815F-434B-A345-7128F17FC314}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63122E9A-815F-434B-A345-7128F17FC314}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63122E9A-815F-434B-A345-7128F17FC314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E77DE3A-54CB-4BC5-A97E-8865FD481813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E77DE3A-54CB-4BC5-A97E-8865FD481813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E77DE3A-54CB-4BC5-A97E-8865FD481813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E77DE3A-54CB-4BC5-A97E-8865FD481813}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {56A5E7CE-ED96-4582-8D22-760CDAC6898C}
+	EndGlobalSection
+EndGlobal
