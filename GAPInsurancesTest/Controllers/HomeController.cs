@@ -10,7 +10,7 @@ namespace GAPInsurancesTest.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "GAP Insurance Test";
 
             return View();
         }

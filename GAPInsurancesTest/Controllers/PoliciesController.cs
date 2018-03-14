@@ -38,6 +38,7 @@ namespace GAPInsurancesTest.Controllers
 
         // PUT: api/Policies/5
         [ResponseType(typeof(void))]
+        [Authorize]
         public async Task<IHttpActionResult> PutPolicy(int id, Policy policy)
         {
             if (!ModelState.IsValid)
@@ -48,6 +49,12 @@ namespace GAPInsurancesTest.Controllers
             if (id != policy.policy_id)
             {
                 return BadRequest();
+            }
+
+                        // If risk type is high and the coverage is over 50%, throw an error
+            if (policy.RiskType.risk_type_id == 4 && policy.coverage_percent > 50)
+            {
+                return BadRequest("The coverage of a high risk policy cannot be greater than 50%");
             }
 
             db.Entry(policy).State = EntityState.Modified;
@@ -73,6 +80,7 @@ namespace GAPInsurancesTest.Controllers
 
         // POST: api/Policies
         [ResponseType(typeof(Policy))]
+        [Authorize]
         public async Task<IHttpActionResult> PostPolicy(Policy policy)
         {
             if (!ModelState.IsValid)
@@ -80,14 +88,32 @@ namespace GAPInsurancesTest.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Policies.Add(policy);
-            await db.SaveChangesAsync();
+            try
+            {
+                // If risk type is high and the coverage is over 50%, throw an error
+                if (policy.risk_type_id == 4 && policy.coverage_percent > 50)
+                {
+                    throw new Exception("The coverage of a high risk policy cannot be greater than 50%");
+                }
 
-            return CreatedAtRoute("DefaultApi", new { id = policy.policy_id }, policy);
+                if (policy.policy_price <= 0 || policy.coverage_percent <= 0)
+                {
+                    throw new Exception("Policy price and coverage percent must be greater than 0");
+                }
+
+                db.Policies.Add(policy);
+                await db.SaveChangesAsync();
+
+                return CreatedAtRoute("DefaultApi", new { id = policy.policy_id }, policy);
+            } catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // DELETE: api/Policies/5
         [ResponseType(typeof(Policy))]
+        [Authorize]
         public async Task<IHttpActionResult> DeletePolicy(int id)
         {
             Policy policy = await db.Policies.FindAsync(id);
