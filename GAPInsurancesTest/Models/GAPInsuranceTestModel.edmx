@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GAPInsurancesDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblClientPolicies">
+          <Key>
+            <PropertyRef Name="client_policy_id" />
+          </Key>
+          <Property Name="client_policy_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="client_id" Type="int" Nullable="false" />
+          <Property Name="policy_id" Type="int" Nullable="false" />
+          <Property Name="start_date" Type="date" Nullable="false" />
+          <Property Name="coverage_period" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblClients">
+          <Key>
+            <PropertyRef Name="client_id" />
+          </Key>
+          <Property Name="client_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="tblCoverageTypes">
+          <Key>
+            <PropertyRef Name="coverage_type_id" />
+          </Key>
+          <Property Name="coverage_type_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="coverage_type" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="tblPolicies">
+          <Key>
+            <PropertyRef Name="policy_id" />
+          </Key>
+          <Property Name="policy_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="policy_name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="policy_description" Type="text" Nullable="false" />
+          <Property Name="coverage_type_id" Type="int" Nullable="false" />
+          <Property Name="coverage_percent" Type="float" Nullable="false" />
+          <Property Name="policy_price" Type="money" Nullable="false" />
+          <Property Name="risk_type_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblRiskTypes">
+          <Key>
+            <PropertyRef Name="risk_type_id" />
+          </Key>
+          <Property Name="risk_type_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="risk_type" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tblClientPolicies_tblClients">
+          <End Role="tblClients" Type="Self.tblClients" Multiplicity="1" />
+          <End Role="tblClientPolicies" Type="Self.tblClientPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblClients">
+              <PropertyRef Name="client_id" />
+            </Principal>
+            <Dependent Role="tblClientPolicies">
+              <PropertyRef Name="client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblClientPolicies_tblPolicies">
+          <End Role="tblPolicies" Type="Self.tblPolicies" Multiplicity="1" />
+          <End Role="tblClientPolicies" Type="Self.tblClientPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPolicies">
+              <PropertyRef Name="policy_id" />
+            </Principal>
+            <Dependent Role="tblClientPolicies">
+              <PropertyRef Name="policy_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblCoverageTypes_tblPolicies">
+          <End Role="tblCoverageTypes" Type="Self.tblCoverageTypes" Multiplicity="1" />
+          <End Role="tblPolicies" Type="Self.tblPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCoverageTypes">
+              <PropertyRef Name="coverage_type_id" />
+            </Principal>
+            <Dependent Role="tblPolicies">
+              <PropertyRef Name="coverage_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPolicies_tblRiskTypes">
+          <End Role="tblRiskTypes" Type="Self.tblRiskTypes" Multiplicity="1" />
+          <End Role="tblPolicies" Type="Self.tblPolicies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblRiskTypes">
+              <PropertyRef Name="risk_type_id" />
+            </Principal>
+            <Dependent Role="tblPolicies">
+              <PropertyRef Name="risk_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GAPInsurancesDBModelStoreContainer">
+          <EntitySet Name="tblClientPolicies" EntityType="Self.tblClientPolicies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblClients" EntityType="Self.tblClients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblCoverageTypes" EntityType="Self.tblCoverageTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPolicies" EntityType="Self.tblPolicies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblRiskTypes" EntityType="Self.tblRiskTypes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblClientPolicies_tblClients" Association="Self.FK_tblClientPolicies_tblClients">
+            <End Role="tblClients" EntitySet="tblClients" />
+            <End Role="tblClientPolicies" EntitySet="tblClientPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblClientPolicies_tblPolicies" Association="Self.FK_tblClientPolicies_tblPolicies">
+            <End Role="tblPolicies" EntitySet="tblPolicies" />
+            <End Role="tblClientPolicies" EntitySet="tblClientPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblCoverageTypes_tblPolicies" Association="Self.FK_tblCoverageTypes_tblPolicies">
+            <End Role="tblCoverageTypes" EntitySet="tblCoverageTypes" />
+            <End Role="tblPolicies" EntitySet="tblPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPolicies_tblRiskTypes" Association="Self.FK_tblPolicies_tblRiskTypes">
+            <End Role="tblRiskTypes" EntitySet="tblRiskTypes" />
+            <End Role="tblPolicies" EntitySet="tblPolicies" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GAPInsurancesDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ClientPolicy">
+          <Key>
+            <PropertyRef Name="client_policy_id" />
+          </Key>
+          <Property Name="client_policy_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="client_id" Type="Int32" Nullable="false" />
+          <Property Name="policy_id" Type="Int32" Nullable="false" />
+          <Property Name="start_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="coverage_period" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_tblClientPolicies_tblClients" FromRole="tblClientPolicies" ToRole="tblClients" />
+          <NavigationProperty Name="Policy" Relationship="Self.FK_tblClientPolicies_tblPolicies" FromRole="tblClientPolicies" ToRole="tblPolicies" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="client_id" />
+          </Key>
+          <Property Name="client_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="first_name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ClientPolicies" Relationship="Self.FK_tblClientPolicies_tblClients" FromRole="tblClients" ToRole="tblClientPolicies" />
+        </EntityType>
+        <EntityType Name="CoverageType">
+          <Key>
+            <PropertyRef Name="coverage_type_id" />
+          </Key>
+          <Property Name="coverage_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="coverage_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="policy_id" />
+          </Key>
+          <Property Name="policy_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="policy_name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="policy_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="coverage_type_id" Type="Int32" Nullable="false" />
+          <Property Name="coverage_percent" Type="Double" Nullable="false" />
+          <Property Name="policy_price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="risk_type_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CoverageType" Relationship="Self.FK_tblCoverageTypes_tblPolicies" FromRole="tblPolicies" ToRole="tblCoverageTypes" />
+          <NavigationProperty Name="RiskType" Relationship="Self.FK_tblPolicies_tblRiskTypes" FromRole="tblPolicies" ToRole="tblRiskTypes" />
+        </EntityType>
+        <EntityType Name="RiskType">
+          <Key>
+            <PropertyRef Name="risk_type_id" />
+          </Key>
+          <Property Name="risk_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="risk_type" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tblClientPolicies_tblClients">
+          <End Role="tblClients" Type="GAPInsurancesDBModel.Client" Multiplicity="1" />
+          <End Role="tblClientPolicies" Type="GAPInsurancesDBModel.ClientPolicy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblClients">
+              <PropertyRef Name="client_id" />
+            </Principal>
+            <Dependent Role="tblClientPolicies">
+              <PropertyRef Name="client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblClientPolicies_tblPolicies">
+          <End Role="tblPolicies" Type="GAPInsurancesDBModel.Policy" Multiplicity="1" />
+          <End Role="tblClientPolicies" Type="GAPInsurancesDBModel.ClientPolicy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPolicies">
+              <PropertyRef Name="policy_id" />
+            </Principal>
+            <Dependent Role="tblClientPolicies">
+              <PropertyRef Name="policy_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblCoverageTypes_tblPolicies">
+          <End Role="tblCoverageTypes" Type="GAPInsurancesDBModel.CoverageType" Multiplicity="1" />
+          <End Role="tblPolicies" Type="GAPInsurancesDBModel.Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCoverageTypes">
+              <PropertyRef Name="coverage_type_id" />
+            </Principal>
+            <Dependent Role="tblPolicies">
+              <PropertyRef Name="coverage_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPolicies_tblRiskTypes">
+          <End Role="tblRiskTypes" Type="GAPInsurancesDBModel.RiskType" Multiplicity="1" />
+          <End Role="tblPolicies" Type="GAPInsurancesDBModel.Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblRiskTypes">
+              <PropertyRef Name="risk_type_id" />
+            </Principal>
+            <Dependent Role="tblPolicies">
+              <PropertyRef Name="risk_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GAPInsurancesDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ClientPolicies" EntityType="GAPInsurancesDBModel.ClientPolicy" />
+          <EntitySet Name="Clients" EntityType="GAPInsurancesDBModel.Client" />
+          <EntitySet Name="CoverageTypes" EntityType="GAPInsurancesDBModel.CoverageType" />
+          <EntitySet Name="Policies" EntityType="GAPInsurancesDBModel.Policy" />
+          <EntitySet Name="RiskTypes" EntityType="GAPInsurancesDBModel.RiskType" />
+          <AssociationSet Name="FK_tblClientPolicies_tblClients" Association="Self.FK_tblClientPolicies_tblClients">
+            <End Role="tblClients" EntitySet="Clients" />
+            <End Role="tblClientPolicies" EntitySet="ClientPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblClientPolicies_tblPolicies" Association="Self.FK_tblClientPolicies_tblPolicies">
+            <End Role="tblPolicies" EntitySet="Policies" />
+            <End Role="tblClientPolicies" EntitySet="ClientPolicies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblCoverageTypes_tblPolicies" Association="Self.FK_tblCoverageTypes_tblPolicies">
+            <End Role="tblCoverageTypes" EntitySet="CoverageTypes" />
+            <End Role="tblPolicies" EntitySet="Policies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPolicies_tblRiskTypes" Association="Self.FK_tblPolicies_tblRiskTypes">
+            <End Role="tblRiskTypes" EntitySet="RiskTypes" />
+            <End Role="tblPolicies" EntitySet="Policies" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GAPInsurancesDBModelStoreContainer" CdmEntityContainer="GAPInsurancesDBEntities">
+          <EntitySetMapping Name="ClientPolicies">
+            <EntityTypeMapping TypeName="GAPInsurancesDBModel.ClientPolicy">
+              <MappingFragment StoreEntitySet="tblClientPolicies">
+                <ScalarProperty Name="client_policy_id" ColumnName="client_policy_id" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="policy_id" ColumnName="policy_id" />
+                <ScalarProperty Name="start_date" ColumnName="start_date" />
+                <ScalarProperty Name="coverage_period" ColumnName="coverage_period" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="GAPInsurancesDBModel.Client">
+              <MappingFragment StoreEntitySet="tblClients">
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CoverageTypes">
+            <EntityTypeMapping TypeName="GAPInsurancesDBModel.CoverageType">
+              <MappingFragment StoreEntitySet="tblCoverageTypes">
+                <ScalarProperty Name="coverage_type_id" ColumnName="coverage_type_id" />
+                <ScalarProperty Name="coverage_type" ColumnName="coverage_type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Policies">
+            <EntityTypeMapping TypeName="GAPInsurancesDBModel.Policy">
+              <MappingFragment StoreEntitySet="tblPolicies">
+                <ScalarProperty Name="policy_id" ColumnName="policy_id" />
+                <ScalarProperty Name="policy_name" ColumnName="policy_name" />
+                <ScalarProperty Name="policy_description" ColumnName="policy_description" />
+                <ScalarProperty Name="coverage_type_id" ColumnName="coverage_type_id" />
+                <ScalarProperty Name="coverage_percent" ColumnName="coverage_percent" />
+                <ScalarProperty Name="policy_price" ColumnName="policy_price" />
+                <ScalarProperty Name="risk_type_id" ColumnName="risk_type_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RiskTypes">
+            <EntityTypeMapping TypeName="GAPInsurancesDBModel.RiskType">
+              <MappingFragment StoreEntitySet="tblRiskTypes">
+                <ScalarProperty Name="risk_type_id" ColumnName="risk_type_id" />
+                <ScalarProperty Name="risk_type" ColumnName="risk_type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
