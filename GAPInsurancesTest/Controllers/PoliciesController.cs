@@ -62,10 +62,15 @@ namespace GAPInsurancesTest.Controllers
                 return BadRequest();
             }
 
-                        // If risk type is high and the coverage is over 50%, throw an error
+            // If risk type is high and the coverage is over 50%, throw an error
             if (policy.RiskType.risk_type_id == 4 && policy.coverage_percent > 50)
             {
                 return BadRequest("The coverage of a high risk policy cannot be greater than 50%");
+            }
+
+            if (policy.policy_price <= 0 || policy.coverage_percent <= 0)
+            {
+                return BadRequest("Policy price and coverage percent must be greater than 0");
             }
 
             this.policyRepository.Update(policy);

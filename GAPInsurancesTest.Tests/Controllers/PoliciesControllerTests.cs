@@ -21,7 +21,6 @@ namespace GAPInsurancesTest.Controllers.Tests
         }
 
         [TestMethod()]
-        [ExpectedException(typeof(Exception), "Policy price and coverage percent must be greater than 0")]
         public async Task PostPolicyTest1()
         {
             Policy p = new Policy
@@ -33,9 +32,23 @@ namespace GAPInsurancesTest.Controllers.Tests
         }
 
         [TestMethod()]
+        public async Task PostPolicyTest2()
+        {
+            Policy p = new Policy
+            {
+                risk_type_id = 4,
+                coverage_percent = 67
+            };
+
+            await this.policiesController.PostPolicy(p);
+        }
+
+        [TestMethod()]
         public void GetPoliciesTest()
         {
-            Assert.Fail();
+            List<Policy> policies = this.policiesController.GetPolicies();
+            Assert.IsNotNull(policies);
+            Assert.IsTrue(policies.Count() > 0);
         }
 
         [TestMethod()]
