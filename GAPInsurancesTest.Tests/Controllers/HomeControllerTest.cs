@@ -19,7 +19,7 @@ namespace GAPInsurancesTest.Tests.Controllers
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Home Page", result.ViewBag.Title);
+            Assert.AreEqual("GAP Insurance Test ", result.ViewBag.Title);
         }
     }
 }
