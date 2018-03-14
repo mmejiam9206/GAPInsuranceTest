@@ -10,25 +10,36 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GAPInsurancesTest.Models;
+using GAPInsurancesTest.Repositories;
 
 namespace GAPInsurancesTest.Controllers
 {
     [Authorize]
     public class ClientPoliciesController : ApiController
     {
-        private GAPInsurancesDBEntities db = new GAPInsurancesDBEntities();
+        private IRepository<ClientPolicy> clientPolicyRepository;
+
+        public ClientPoliciesController()
+        {
+            this.clientPolicyRepository = new Repository<ClientPolicy>(new GAPInsurancesDBEntities());
+        }
+
+        public ClientPoliciesController(IRepository<ClientPolicy> clientPolicyRepository)
+        {
+            this.clientPolicyRepository = clientPolicyRepository;
+        }
 
         // GET: api/ClientPolicies
         public IQueryable<ClientPolicy> GetClientPolicies()
         {
-            return db.ClientPolicies;
+            return (IQueryable<ClientPolicy>)this.clientPolicyRepository.GetAll();
         }
 
         // GET: api/ClientPolicies/5
         [ResponseType(typeof(ClientPolicy))]
         public async Task<IHttpActionResult> GetClientPolicy(int id)
         {
-            ClientPolicy clientPolicy = await db.ClientPolicies.FindAsync(id);
+            ClientPolicy clientPolicy = await this.clientPolicyRepository.GetById(id);
             if (clientPolicy == null)
             {
                 return NotFound();
@@ -51,11 +62,11 @@ namespace GAPInsurancesTest.Controllers
                 return BadRequest();
             }
 
-            db.Entry(clientPolicy).State = EntityState.Modified;
+            this.clientPolicyRepository.Update(clientPolicy);
 
             try
             {
-                await db.SaveChangesAsync();
+                await this.clientPolicyRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -81,8 +92,8 @@ namespace GAPInsurancesTest.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.ClientPolicies.Add(clientPolicy);
-            await db.SaveChangesAsync();
+            this.clientPolicyRepository.Insert(clientPolicy);
+            await this.clientPolicyRepository.Save();
 
             return CreatedAtRoute("DefaultApi", new { id = clientPolicy.client_policy_id }, clientPolicy);
         }
@@ -91,14 +102,14 @@ namespace GAPInsurancesTest.Controllers
         [ResponseType(typeof(ClientPolicy))]
         public async Task<IHttpActionResult> DeleteClientPolicy(int id)
         {
-            ClientPolicy clientPolicy = await db.ClientPolicies.FindAsync(id);
+            ClientPolicy clientPolicy = await this.clientPolicyRepository.GetById(id);
             if (clientPolicy == null)
             {
                 return NotFound();
             }
 
-            db.ClientPolicies.Remove(clientPolicy);
-            await db.SaveChangesAsync();
+            this.clientPolicyRepository.Delete(clientPolicy);
+            await this.clientPolicyRepository.Save();
 
             return Ok(clientPolicy);
         }
@@ -107,14 +118,14 @@ namespace GAPInsurancesTest.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                this.clientPolicyRepository.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool ClientPolicyExists(int id)
         {
-            return db.ClientPolicies.Count(e => e.client_policy_id == id) > 0;
+            return this.clientPolicyRepository.Exists(id);
         }
     }
 }

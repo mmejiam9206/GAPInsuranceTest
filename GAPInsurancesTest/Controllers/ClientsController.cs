@@ -10,26 +10,37 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GAPInsurancesTest.Models;
+using GAPInsurancesTest.Repositories;
 
 namespace GAPInsurancesTest.Controllers
 {
     [Authorize]
     public class ClientsController : ApiController
     {
-        private GAPInsurancesDBEntities db = new GAPInsurancesDBEntities();
+        private IRepository<Client> clientRepository;
+
+        public ClientsController()
+        {
+            this.clientRepository = new Repository<Client>(new GAPInsurancesDBEntities());
+        }
+
+        public ClientsController(IRepository<Client> clientRepository)
+        {
+            this.clientRepository = clientRepository;
+        }
 
         // GET: api/Clients
         [AllowAnonymous]
         public IQueryable<Client> GetClients()
         {
-            return db.Clients;
+            return (IQueryable<Client>)this.clientRepository.GetAll();
         }
 
         // GET: api/Clients/5
         [ResponseType(typeof(Client))]
         public async Task<IHttpActionResult> GetClient(int id)
         {
-            Client client = await db.Clients.FindAsync(id);
+            Client client = await this.clientRepository.GetById(id);
             if (client == null)
             {
                 return NotFound();
@@ -52,11 +63,11 @@ namespace GAPInsurancesTest.Controllers
                 return BadRequest();
             }
 
-            db.Entry(client).State = EntityState.Modified;
+            this.clientRepository.Update(client);
 
             try
             {
-                await db.SaveChangesAsync();
+                await this.clientRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -82,8 +93,8 @@ namespace GAPInsurancesTest.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Clients.Add(client);
-            await db.SaveChangesAsync();
+            this.clientRepository.Insert(client);
+            await this.clientRepository.Save();
 
             return CreatedAtRoute("DefaultApi", new { id = client.client_id }, client);
         }
@@ -92,14 +103,14 @@ namespace GAPInsurancesTest.Controllers
         [ResponseType(typeof(Client))]
         public async Task<IHttpActionResult> DeleteClient(int id)
         {
-            Client client = await db.Clients.FindAsync(id);
+            Client client = await this.clientRepository.GetById(id);
             if (client == null)
             {
                 return NotFound();
             }
 
-            db.Clients.Remove(client);
-            await db.SaveChangesAsync();
+            this.clientRepository.Delete(client);
+            await this.clientRepository.Save();
 
             return Ok(client);
         }
@@ -108,14 +119,14 @@ namespace GAPInsurancesTest.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                this.clientRepository.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool ClientExists(int id)
         {
-            return db.Clients.Count(e => e.client_id == id) > 0;
+            return this.clientRepository.Exists(id);
         }
     }
 }

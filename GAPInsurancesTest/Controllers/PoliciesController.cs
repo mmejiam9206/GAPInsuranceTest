@@ -10,24 +10,35 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using GAPInsurancesTest.Models;
+using GAPInsurancesTest.Repositories;
 
 namespace GAPInsurancesTest.Controllers
 {
     public class PoliciesController : ApiController
     {
-        private GAPInsurancesDBEntities db = new GAPInsurancesDBEntities();
+        private IRepository<Policy> policyRepository;
+
+        public PoliciesController()
+        {
+            this.policyRepository = new Repository<Policy>(new GAPInsurancesDBEntities());
+        }
+
+        public PoliciesController(IRepository<Policy> policyRepository)
+        {
+            this.policyRepository = policyRepository;
+        }
 
         // GET: api/Policies
         public IQueryable<Policy> GetPolicies()
         {
-            return db.Policies;
+            return (IQueryable<Policy>)this.policyRepository.GetAll();
         }
 
         // GET: api/Policies/5
         [ResponseType(typeof(Policy))]
         public async Task<IHttpActionResult> GetPolicy(int id)
         {
-            Policy policy = await db.Policies.FindAsync(id);
+            Policy policy = await this.policyRepository.GetById(id);
             if (policy == null)
             {
                 return NotFound();
@@ -57,11 +68,11 @@ namespace GAPInsurancesTest.Controllers
                 return BadRequest("The coverage of a high risk policy cannot be greater than 50%");
             }
 
-            db.Entry(policy).State = EntityState.Modified;
+            this.policyRepository.Update(policy);
 
             try
             {
-                await db.SaveChangesAsync();
+                await this.policyRepository.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -101,8 +112,8 @@ namespace GAPInsurancesTest.Controllers
                     throw new Exception("Policy price and coverage percent must be greater than 0");
                 }
 
-                db.Policies.Add(policy);
-                await db.SaveChangesAsync();
+                this.policyRepository.Insert(policy);
+                await this.policyRepository.Save();
 
                 return CreatedAtRoute("DefaultApi", new { id = policy.policy_id }, policy);
             } catch(Exception e)
@@ -116,14 +127,14 @@ namespace GAPInsurancesTest.Controllers
         [Authorize]
         public async Task<IHttpActionResult> DeletePolicy(int id)
         {
-            Policy policy = await db.Policies.FindAsync(id);
+            Policy policy = await this.policyRepository.GetById(id);
             if (policy == null)
             {
                 return NotFound();
             }
 
-            db.Policies.Remove(policy);
-            await db.SaveChangesAsync();
+            this.policyRepository.Delete(policy);
+            await this.policyRepository.Save();
 
             return Ok(policy);
         }
@@ -132,14 +143,14 @@ namespace GAPInsurancesTest.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                this.policyRepository.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool PolicyExists(int id)
         {
-            return db.Policies.Count(e => e.policy_id == id) > 0;
+            return this.policyRepository.Exists(id);
         }
     }
 }
