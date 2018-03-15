@@ -14,6 +14,7 @@ using GAPInsurancesTest.Repositories;
 
 namespace GAPInsurancesTest.Controllers
 {
+    [Authorize]
     public class PoliciesController : ApiController
     {
         private IRepository<Policy> policyRepository;
@@ -31,7 +32,7 @@ namespace GAPInsurancesTest.Controllers
         // GET: api/Policies
         public IQueryable<Policy> GetPolicies()
         {
-            return (IQueryable<Policy>)this.policyRepository.GetAll();
+            return this.policyRepository.GetAll().AsQueryable<Policy>();
         }
 
         // GET: api/Policies/5
@@ -49,7 +50,6 @@ namespace GAPInsurancesTest.Controllers
 
         // PUT: api/Policies/5
         [ResponseType(typeof(void))]
-        [Authorize]
         public async Task<IHttpActionResult> PutPolicy(int id, Policy policy)
         {
             if (!ModelState.IsValid)
@@ -96,7 +96,6 @@ namespace GAPInsurancesTest.Controllers
 
         // POST: api/Policies
         [ResponseType(typeof(Policy))]
-        [Authorize]
         public async Task<IHttpActionResult> PostPolicy(Policy policy)
         {
             if (!ModelState.IsValid)
@@ -129,7 +128,6 @@ namespace GAPInsurancesTest.Controllers
 
         // DELETE: api/Policies/5
         [ResponseType(typeof(Policy))]
-        [Authorize]
         public async Task<IHttpActionResult> DeletePolicy(int id)
         {
             Policy policy = await this.policyRepository.GetById(id);

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GAPInsurancesTest.Models;
 using GAPInsurancesTest.Repositories;
+using System.Web.Http;
 using GAPInsurancesTest.Tests.Repositories;
 
 namespace GAPInsurancesTest.Controllers.Tests
@@ -46,34 +47,46 @@ namespace GAPInsurancesTest.Controllers.Tests
         [TestMethod()]
         public void GetPoliciesTest()
         {
-            List<Policy> policies = this.policiesController.GetPolicies();
+            IQueryable<Policy> policies = this.policiesController.GetPolicies();
             Assert.IsNotNull(policies);
-            Assert.IsTrue(policies.Count() > 0);
+            Assert.IsTrue(policies.LongCount() > 0);
         }
 
         [TestMethod()]
         public void GetPolicyTest()
         {
-            Assert.Fail();
+            // await this.policiesController.GetPolicy(1);
         }
 
         [TestMethod()]
-        public void PutPolicyTest()
+        public async Task PutPolicyTest()
         {
-            Assert.Fail();
+            Policy p = new Policy
+            {
+                risk_type_id = 4,
+                coverage_percent = 67
+            };
+
+            await this.policiesController.PutPolicy(8, p);
         }
 
         [TestMethod()]
         [ExpectedException(typeof(Exception), "Policy price and coverage percent must be greater than 0")]
-        public void PostPolicyTest()
+        public async Task PostPolicyTest()
         {
-            Assert.Fail();
+            Policy p = new Policy
+            {
+                risk_type_id = 4,
+                coverage_percent = 67
+            };
+
+            await this.policiesController.PostPolicy(p);
         }
 
         [TestMethod()]
-        public void DeletePolicyTest()
+        public async Task DeletePolicyTest()
         {
-            Assert.Fail();
+            await this.policiesController.DeletePolicy(1);
         }
     }
 }

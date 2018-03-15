@@ -43,13 +43,13 @@ namespace GAPInsurancesTest.Tests.Repositories
             return this.policies;
         }
 
-        public async Task<Policy> GetById(object id)
+        public Task<Policy> GetById(object id)
         {
             Policy policy = this.policies.FirstOrDefault(p => p.policy_id == (int)id);
 
             Func<Policy> getPolicy = () => { return policy; };
             
-            return await new Task<Policy>(getPolicy);
+            return new Task<Policy>(getPolicy);
         }
 
         public void Insert(Policy entity)
