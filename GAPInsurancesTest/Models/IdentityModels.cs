@@ -21,7 +21,7 @@ namespace GAPInsurancesTest.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("GAPInsurancesDBEntities", throwIfV1Schema: false)
         {
         }
         
